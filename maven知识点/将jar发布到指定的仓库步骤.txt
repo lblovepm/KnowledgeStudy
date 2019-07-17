@@ -1,0 +1,16 @@
+将jar发布到指定的仓库步骤
+
+(1)、pom.xml中添加
+  <distributionManagement>
+    <snapshotRepository>
+       <id>local-nexus</id>
+       <url>http://localhost:8081/repository/maven-snapshots/</url>
+    </snapshotRepository>
+  </distributionManagement>
+
+(2)、maven的setting.xml中添加
+    <server>
+         <id>local-nexus</id>
+         <username>lb</username>
+         <password>123456</password>
+    </server>
