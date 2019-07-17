@@ -1,0 +1,12 @@
+synchronized修饰：
+	非静态方法 <-----> 非静态方法  ----->不能同时运行
+	静态方法 <-----> 静态方法  ----->不能同时运行
+	静态方法 <-----> 非静态方法  ----->能同时运行
+	synchronized(this) 相当于非静态方法
+	synchronized(当前类名.class)  相当于静态方法
+	
+	Synchronized修饰非静态方法,实际上是对调用该方法的对象加锁,俗称"对象锁"
+	
+	Synchronized修饰静态方法,实际上是对该类对象加锁,俗称"类锁"
+	
+	monitor		----->    monitorenter(锁进入指令)、monitorexit(锁退出指令)

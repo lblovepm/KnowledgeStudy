@@ -1,0 +1,177 @@
+Docker默认的镜像和容器存储位置在/var/lib/docker,可以通过修改docker.service文件来修改存储位置
+
+1、启动、关闭 docker
+	1.1、启动：
+		service docker start
+	1.2、关闭：
+		service docker stop
+	
+2、查找需要安装的镜像
+	docker search centos	--->	centos表示查询的关键字
+	
+	INDEX       NAME                                         DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED
+	docker.io   docker.io/centos                             The official build of CentOS.                   5062      [OK]
+	docker.io   docker.io/ansible/centos7-ansible            Ansible on Centos7                              119                  [OK]
+	docker.io   docker.io/jdeathe/centos-ssh                 CentOS-6 6.10 x86_64 / CentOS-7 7.5.1804 x...   102                  [OK]
+	docker.io   docker.io/consol/centos-xfce-vnc             Centos container with "headless" VNC sessi...   73                   [OK]
+	docker.io   docker.io/imagine10255/centos6-lnmp-php56    centos6-lnmp-php56                              48                   [OK]
+	
+3、安装查询到的镜像  (docker.io/centos 是NAME字段下面的值)
+	docker pull docker.io/centos 
+	
+4、查看本地已有的镜像
+	docker images
+	
+	REPOSITORY                      TAG                 IMAGE ID            CREATED             SIZE
+	docker.io/centos   				latest              feebb0109819        5 weeks ago         144 MB
+
+	4.1、启动镜像 
+		docker run -dt REPOSITORY /bin/bash		eg: docker run -dt docker.io/hello-world /bin/bash  --->此命令会返回一个容器id(containerID:5b87463e6c159)
+	4.2、删除镜像 
+		docker rmi IMAGE ID		eg: docker rmi feebb0109819
+	
+	
+5、container:
+	5.1、创建container 				
+			docker create 					eg: docker create chenhengjie123/xwalkdriver
+	5.2、创建并运行container 	
+			5.2.1、普通运行docker镜像
+				docker run 						eg: docker run chenhengjie123/xwalkdriver /bin/bash
+			5.2.1、端口映射运行docker镜像
+				docker run --privileged -ti -d --name lb20190301 -p 8080:80 docker.io/centos
+				-p 	将docker容器中的80端口映射到 宿主机 的8080端口
+　　			-t  选项让Docker分配一个伪终端(pseudo-tty)并绑定到容器的标准输入上.
+　　			-i  则让容器的标准输入保持打开.
+　　			--name 容器的名字为	lb20190301   (这一项自己命名)
+　　			docker.io/centos 是上面安装的镜像
+				--privileged ：privileged被引入docker.使用该参数,container内的root拥有真正的root权限.
+								否则,container内的root只是外部的一个普通用户权限.
+								privileged启动的容器,可以看到很多host上的设备,并且可以执行mount.
+								甚至允许你在docker容器中启动docker容器
+
+	5.3、进入容器 
+			docker exec -ti CONTAINER ID /bin/bash    eg: docker exec -ti 5b87463e6c159 /bin/bash
+			
+	5.4、查看正在运行的所有container信息 		
+			docker ps
+	5.5、查看最后创建的container 	
+			docker ps -l		
+	5.6、查看所有container,包括正在运行和已经关闭的 	
+			docker ps -a
+			
+		CONTAINER ID        IMAGE                           COMMAND             CREATED             STATUS                      PORTS	NAMES
+		5b87463e6c15        docker.io/openresty/openresty   "/bin/bash"         8 minutes ago       Up 8 minutes                        eager_wing
+		a640be340294        docker.io/hello-world           "/bin/bash"         11 minutes ago      Created                             silly_lumiere
+		800d07e386f9        hello-world                     "/hello"            17 minutes ago      Exited (0) 17 minutes ago           romantic_wozniak
+		fad2ff89306a        docker.io/openresty/openresty   "/bin/bash"         35 minutes ago      Up 35 minutes                       infallible_spence
+	
+	[(以下命令中需要指定 container 时,如果使用【CONTAINER ID】操作失败,可以使用名称【NAMES】尝试一次)]
+	5.7、输出指定 container的stdout信息(用来看 log,效果和 tail -f 类似，会实时输出) 	
+			docker logs -f [container] 			eg:		docker logs -f 5b87463e6c15
+	5.8、获取container指定端口映射关系 	
+			docker port [container] [port] 		eg:		docker port 5b87463e6c15 5000
+	5.9、查看container进程列表 	
+			docker top [container] 				eg:		docker top 5b87463e6c15
+	5.10、停止运行指定的container 
+			docker stop CONTAINER ID 			eg:		docker top 5b87463e6c15		
+	5.11、强制停止container 	
+			docker kill [container] 			eg:		docker kill 5b87463e6c15
+	5.12、启动一个已经停止的container 	
+			docker start [container] 			eg:		docker start eager_wing			---->返回容器的id,然后通过id进入container
+	5.13、重启container(若container处于关闭状态,则直接启动) 	
+			docker restart [container] 			eg:		docker restart eager_wing		---->返回容器的id,然后通过id进入container
+	5.14、进入容器 
+			docker exec -ti CONTAINER ID /bin/bash    eg: docker exec -ti 5b87463e6c159 /bin/bash
+	5.15、退出当前容器 
+			exit
+	5.16、删除 container 	
+			docker rm [container] 				eg:		docker rm 5b87463e6c15
+			
+6、image
+	6.1、查看本地所有image 	
+			docker images
+			
+			REPOSITORY                      TAG                 IMAGE ID            CREATED             SIZE
+			docker.io/openresty/openresty   latest              feebb0109819        5 weeks ago         144 MB
+			docker.io/hello-world           latest              4ab4c602aa5e        3 months ago        1.84 kB
+			
+	6.2、在 registry 中搜索镜像 	(该命令需要先登录注册的账号 ---> eg: docker login)
+			docker search [query] 			eg:		docker search lb2019/lb_private
+			
+	6.3、删除本地image 	
+			docker rmi [image] 				eg:		docker rmi 4ab4c602aa5e
+			
+注意问题:
+	1、docker重新进入容器时“/etc/profile”中环境变量失效:
+		如果在docker中设置了环境变量，肯定希望下次进入容器时自动生效。如果是在：/etc/profile 中设置的,
+			再次进入容器时环境变量会失效，解决办法是将环境变量设置在：/root/.bashrc 中,再次登录容器仍然有效.
+			更好的解决办法是使用Dockerfile构建镜像，并使用entrypoint进行配置
+			
+
+7、docker将容器上传到dockerhub仓库中
+	7.1、查看容器,获取容器ID (container ID)
+		docker ps 或者 docker ps -a 
+	7.2、提交容器为镜像
+		docker commit container ID lb2019/test_repository  (lb2019：dockerhub登录ID, test_repository：仓库名称)
+		该命令返回一个仓库中数据存储的id ---> sha256: a4d92c73681ecd1fd16ade478bb1d8ad5d3405d7b6fb4481903b74654a2e02c8
+	7.3、登录一个dockerhub帐户
+		docker login
+	7.4、将7.2中的镜像push到dockerhub上
+		docker push lb2019/test_repository:latest	(这个latest其实就是一个tag name 会在dockerhub的Tags那里显示)
+	7.5、验证一下
+		docker inspect lb2019/test_repository
+		
+8、查看docker信息
+	docker info
+		Containers: 1
+		 Running: 1
+		 Paused: 0
+		 Stopped: 0
+		Images: 6
+		Server Version: 1.13.1
+		Storage Driver: overlay2
+		 Backing Filesystem: extfs
+		 Supports d_type: true
+		 Native Overlay Diff: false
+		Logging Driver: journald
+		Cgroup Driver: systemd
+		Plugins:
+		 Volume: local
+		 Network: bridge host macvlan null overlay
+		Swarm: inactive
+		Runtimes: docker-runc runc
+		Default Runtime: docker-runc
+		Init Binary: /usr/libexec/docker/docker-init-current
+		containerd version:  (expected: aa8187dbd3b7ad67d8e5e3a15115d3eef43a7ed1)
+		runc version: N/A (expected: 9df8b306d01f59d3a8029be411de015b7304dd8f)
+		init version: fec3683b971d9c3ef73f284f176672c44b448662 (expected: 949e6facb77383876aeff8a6944dde66b3089574)
+		Security Options:
+		 seccomp
+		  WARNING: You're not using the default seccomp profile
+		  Profile: /etc/docker/seccomp.json
+		Kernel Version: 3.10.0-514.26.2.el7.x86_64
+		Operating System: CentOS Linux 7 (Core)
+		OSType: linux
+		Architecture: x86_64
+		Number of Docker Hooks: 3
+		CPUs: 2
+		Total Memory: 3.702 GiB
+		Name: VM_3_204_centos
+		ID: BR2B:43QF:V6T6:PI7Q:36DA:H46D:6MAE:OX3A:3FNE:26NI:LSNS:6NW2
+		Docker Root Dir: /var/lib/docker			-------------------------->  这里是docker存储的真实路径(overlay2是文件夹的存储目录)
+		Debug Mode (client): false
+		Debug Mode (server): false
+		Username: lb2019
+		Registry: https://index.docker.io/v1/
+		WARNING: bridge-nf-call-iptables is disabled
+		WARNING: bridge-nf-call-ip6tables is disabled
+		Experimental: false
+		Insecure Registries:
+		 127.0.0.0/8
+		Live Restore Enabled: false
+		Registries: docker.io (secure)
+		
+																
+																
+																
+	

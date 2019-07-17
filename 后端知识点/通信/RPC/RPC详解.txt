@@ -1,0 +1,21 @@
+1、RPC简介:
+	RPC,全称为Remote Procedure Call,即远程过程调用,它是一个计算机通信协议.它允许像调用本地服务一样调用远程服务.
+		a、RPC可以有不同的实现方式.如RMI(远程方法调用)、Hessian、Http invoker等.
+		b、RPC是与语言无关的.
+		c、RPC本质为消息处理模型,RPC屏蔽了底层不同主机间的通信细节,让进程调用远程的服务就像是本地的服务一样
+		
+		
+2、RPC和MQ(Message Queue消息中间件)的对比:
+
+	RPC系统结构：(同步调用)
+	+----------+     +----------+
+	| Consumer | <=> | Provider |
+	+----------+     +----------+
+	Consumer调用的Provider提供的服务。
+	 
+	 
+	Message Queue系统结构：(异步调用)
+	+--------+     +-------+     +----------+
+	| Sender | <=> | Queue | <=> | Receiver |
+	+--------+     +-------+     +----------+
+	Sender发送消息给Queue；Receiver从Queue拿到消息来处理。

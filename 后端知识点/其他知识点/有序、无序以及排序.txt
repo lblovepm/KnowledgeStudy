@@ -1,0 +1,9 @@
+有序、无序:
+	是指在进行插入操作时,插入位置的顺序性
+	先插的位置在前,后插的位置在后,则为有序,反之无序
+排序:
+	是指集合内的元素是否按照升序或降序来排序
+	
+实现了List接口的集合类全部有序,如ArrayList、LinkedList
+实现了Set接口的集合类中,HashSet无序,LinkedHashSet有序,TreeSet排序
+实现了Map接口的集合类中,HashMap无序,LinkedHashMap有序,TreeMap排序

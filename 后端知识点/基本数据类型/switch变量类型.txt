@@ -1,0 +1,16 @@
+在Java5以前,switch(expr)中,exper只能是byte,short,char,int类型。
+
+从Java5开始,java中引入了枚举类型,即enum类型。
+
+从Java7开始,exper还可以是String类型
+
+
+所以switch变量类型有6种: byte、short、char、int、String、eunm
+(byte、short、char 都可以转为 int 类型,long转int类型会失去精度)
+
+注意:
+	当进行case判断时，JVM会自动从上到小扫描，寻找匹配的case，可能存在以下情况
+	1、若未找到，则执行默认的case
+	2、当每一个case都不存在break时，JVM并不会顺序输出每一个case对应的返回值，而是继续匹配，匹配不成功则返回默认case
+	3、当每一个case都不存在break时，匹配成功后，从当前case开始，依次返回后续所有case的返回值
+	4、若当前匹配成功的case不存在break，则从当前case开始，依次返回后续case的返回值，直到遇到break，跳出判断

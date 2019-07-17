@@ -1,0 +1,2 @@
+SQLException  	Sql语句执行异常
+IOException		输入输出异常 

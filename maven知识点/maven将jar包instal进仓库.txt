@@ -1,0 +1,4 @@
+Maven在将jar包上传到仓库:(注意:install:install-file中间不能存在空格)
+	mvn install:install-file -Dfile=C:\home\youliao\jacob-1.18.jar -DgroupId=com.jacob -DartifactId=jacob -Dversion=1.18 -Dpackaging=jar
+	
+	mvn install:install-file -Dfile=/usr/local/maven/jodconverter-2.2.2.jar -DgroupId=com.artofsolving -DartifactId=jodconverter -Dversion=2.2.2 -Dpackaging=jar

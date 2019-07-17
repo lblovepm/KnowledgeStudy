@@ -1,0 +1,6 @@
+IO：
+	block io 即 BIO
+	
+NIO：
+	non-block io 即 NIO
+	
